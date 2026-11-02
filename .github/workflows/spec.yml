@@ -1,0 +1,23 @@
+name: spec
+on: workflow_dispatch
+jobs:
+  spec:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: whoami
+        run: |
+          echo "=== OS ==="
+          head -3 /etc/os-release; uname -sr
+          echo "=== CPU ==="
+          nproc; lscpu | grep -E "^Model name|^CPU\(s\)|^Thread|^Core" | head -6
+          echo "=== MEM ==="
+          free -m | head -3
+          echo "=== DISK ==="
+          df -h / | tail -1
+          echo "=== TOOLCHAIN ==="
+          python3 -V; node -v; npm -v; git --version; docker --version 2>/dev/null || echo "no docker"
+          go version 2>/dev/null || echo "no go"
+          echo "=== ENV ==="
+          echo "runner_os=$RUNNER_OS image=$ImageOS"
+          cat /etc/hostname
